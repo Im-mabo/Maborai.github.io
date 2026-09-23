@@ -51,7 +51,7 @@ async function loadPosts() {
     console.error(err);
     listEl.innerHTML = '';
     emptyEl.hidden = false;
-    emptyEl.textContent = 'خطا در بارگذاری پست‌ها.';
+    emptyEl.textContent = 'Failed to load posts.';
   }
 }
 
@@ -82,7 +82,7 @@ function renderPage() {
 
   if (!currentFiltered.length) {
     emptyEl.hidden = false;
-    emptyEl.textContent = 'پستی پیدا نشد.';
+    emptyEl.textContent = 'No posts found.';
     pagerEl.hidden = true;
     return;
   }
@@ -106,7 +106,7 @@ function renderPage() {
       <h2 class="post-title">${escapeHtml(post.title)}</h2>
       <p class="post-excerpt">${escapeHtml(shortText)}${needsClamp ? '…' : ''}</p>
       <div class="post-body" hidden>${post.content || ''}</div>
-      ${post.content ? `<button class="btn-readmore">مشاهده ادامه</button>` : ''}
+      ${post.content ? `<button class="btn-readmore">See more</button>` : ''}
       <div class="post-meta">
         <img class="author-avatar" src="${escapeAttr(post.authorAvatar)}" alt="" loading="lazy" onerror="this.style.display='none'">
         <span class="author-name">${escapeHtml(post.authorName)}</span>
@@ -119,7 +119,7 @@ function renderPage() {
   pagerEl.hidden = totalPages <= 1;
   prevBtn.disabled = currentPage <= 1;
   nextBtn.disabled = currentPage >= totalPages;
-  pageLabel.textContent = `صفحه ${currentPage} از ${totalPages}`;
+  pageLabel.textContent = `Page ${currentPage} of ${totalPages}`;
 
   window.scrollTo({ top: 0, behavior: 'instant' });
 }
@@ -135,7 +135,7 @@ listEl.addEventListener('click', (e) => {
   const isOpen = !bodyEl.hidden;
   bodyEl.hidden = isOpen;
   excerptEl.hidden = !isOpen;
-  btn.textContent = isOpen ? 'مشاهده ادامه' : 'بستن';
+  btn.textContent = isOpen ? 'See more' : 'See less';
 });
 
 prevBtn.addEventListener('click', () => {
