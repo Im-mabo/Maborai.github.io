@@ -99,6 +99,7 @@ function renderPage() {
     card.className = 'post-card';
 
     const needsClamp = (post.excerpt || '').length > EXCERPT_LEN;
+    const shortText = (post.excerpt || '').slice(0, EXCERPT_LEN);
 
     card.innerHTML = `
       <img class="post-banner" src="${escapeAttr(post.banner)}" alt="" loading="lazy" onerror="this.style.display='none'">
