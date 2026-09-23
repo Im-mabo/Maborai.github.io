@@ -57,24 +57,51 @@ function formatDate(dateStr) {
   } catch { return dateStr; }
 }
 
+const PAGE_SIZE = 30;
+const EXCERPT_LEN = 200;
+let currentPage = 1;
+let currentFiltered = [];
+
+const pagerEl = document.getElementById('pager');
+const prevBtn = document.getElementById('prev-page');
+const nextBtn = document.getElementById('next-page');
+const pageLabel = document.getElementById('page-label');
+
 function render(posts) {
+  currentFiltered = posts;
+  currentPage = 1;
+  renderPage();
+}
+
+function renderPage() {
   listEl.innerHTML = '';
-  if (!posts.length) {
+
+  if (!currentFiltered.length) {
     emptyEl.hidden = false;
     emptyEl.textContent = 'پستی پیدا نشد.';
+    pagerEl.hidden = true;
     return;
   }
   emptyEl.hidden = true;
 
+  const totalPages = Math.max(1, Math.ceil(currentFiltered.length / PAGE_SIZE));
+  currentPage = Math.min(currentPage, totalPages);
+  const start = (currentPage - 1) * PAGE_SIZE;
+  const pagePosts = currentFiltered.slice(start, start + PAGE_SIZE);
+
   const frag = document.createDocumentFragment();
-  posts.forEach(post => {
-    const card = document.createElement('a');
+  pagePosts.forEach(post => {
+    const card = document.createElement('article');
     card.className = 'post-card';
-    card.href = post.file;
+
+    const needsClamp = (post.excerpt || '').length > EXCERPT_LEN;
+
     card.innerHTML = `
       <img class="post-banner" src="${escapeAttr(post.banner)}" alt="" loading="lazy" onerror="this.style.display='none'">
       <h2 class="post-title">${escapeHtml(post.title)}</h2>
-      <p class="post-excerpt">${escapeHtml(post.excerpt)}</p>
+      <p class="post-excerpt">${escapeHtml(shortText)}${needsClamp ? '…' : ''}</p>
+      <div class="post-body" hidden>${post.content || ''}</div>
+      ${post.content ? `<button class="btn-readmore">مشاهده ادامه</button>` : ''}
       <div class="post-meta">
         <img class="author-avatar" src="${escapeAttr(post.authorAvatar)}" alt="" loading="lazy" onerror="this.style.display='none'">
         <span class="author-name">${escapeHtml(post.authorName)}</span>
@@ -83,7 +110,36 @@ function render(posts) {
     frag.appendChild(card);
   });
   listEl.appendChild(frag);
+
+  pagerEl.hidden = totalPages <= 1;
+  prevBtn.disabled = currentPage <= 1;
+  nextBtn.disabled = currentPage >= totalPages;
+  pageLabel.textContent = `صفحه ${currentPage} از ${totalPages}`;
+
+  window.scrollTo({ top: 0, behavior: 'instant' });
 }
+
+listEl.addEventListener('click', (e) => {
+  const btn = e.target.closest('.btn-readmore');
+  if (!btn) return;
+
+  const card = btn.closest('.post-card');
+  const bodyEl = card.querySelector('.post-body');
+  const excerptEl = card.querySelector('.post-excerpt');
+
+  const isOpen = !bodyEl.hidden;
+  bodyEl.hidden = isOpen;
+  excerptEl.hidden = !isOpen;
+  btn.textContent = isOpen ? 'مشاهده ادامه' : 'بستن';
+});
+
+prevBtn.addEventListener('click', () => {
+  if (currentPage > 1) { currentPage--; renderPage(); }
+});
+nextBtn.addEventListener('click', () => {
+  const totalPages = Math.max(1, Math.ceil(currentFiltered.length / PAGE_SIZE));
+  if (currentPage < totalPages) { currentPage++; renderPage(); }
+});
 
 function applyFilters() {
   const q = searchInput.value.trim().toLowerCase();
