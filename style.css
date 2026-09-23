@@ -154,6 +154,8 @@ button{ font-family: inherit; cursor: pointer; }
   border-radius: var(--radius);
   margin-bottom: 20px;
   background: var(--bg-raised);
+  pointer-events: none;
+  -webkit-user-drag: none;
 }
 
 .post-title{
@@ -194,6 +196,14 @@ button{ font-family: inherit; cursor: pointer; }
   font-size: 13px;
   color: var(--text-faint);
   margin-right: auto;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.pin-icon{
+  width: 13px;
+  height: 13px;
 }
 
 .empty-state{
