@@ -41,7 +41,11 @@ async function loadPosts() {
     const res = await fetch('index.json', { cache: 'no-store' });
     if (!res.ok) throw new Error('index.json not found');
     const data = await res.json();
-    allPosts = data.sort((a, b) => new Date(b.date) - new Date(a.date));
+    allPosts = data.sort((a, b) => {
+      if (a.pinned && !b.pinned) return -1;
+      if (!a.pinned && b.pinned) return 1;
+      return new Date(b.date) - new Date(a.date);
+    });
     render(allPosts);
   } catch (err) {
     console.error(err);
@@ -105,7 +109,7 @@ function renderPage() {
       <div class="post-meta">
         <img class="author-avatar" src="${escapeAttr(post.authorAvatar)}" alt="" loading="lazy" onerror="this.style.display='none'">
         <span class="author-name">${escapeHtml(post.authorName)}</span>
-        <span class="post-date">${formatDate(post.date)}</span>
+        <span class="post-date">${post.pinned ? `<svg class="pin-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 17v5M8 3h8l-1 6 3 3v2H6v-2l3-3-1-6Z"/></svg> Pinned post` : formatDate(post.date)}</span>
       </div>`;
     frag.appendChild(card);
   });
