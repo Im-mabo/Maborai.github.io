@@ -53,7 +53,7 @@ async function loadPosts() {
 
 function formatDate(dateStr) {
   try {
-    return new Intl.DateTimeFormat('fa-IR', { year: 'numeric', month: 'long', day: 'numeric' }).format(new Date(dateStr));
+    return new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'long', day: 'numeric' }).format(new Date(dateStr));
   } catch { return dateStr; }
 }
 
