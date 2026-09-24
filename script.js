@@ -45,8 +45,9 @@ const emptyEl = document.getElementById('empty-state');
 const searchInput = document.getElementById('search-input');
 const dateFilter = document.getElementById('date-filter');
 
-const PAGE_SIZE   = 25;
-const EXCERPT_LEN = 200;
+const PAGE_SIZE     = 25;
+const EXCERPT_LEN   = 200;
+const PAGER_ENABLED = true; // بذار false تا pager همیشه مخفی بمونه
 
 let allPosts        = [];
 let currentPage     = 1;
@@ -113,15 +114,10 @@ function renderPage() {
   pagePosts.forEach(post => frag.appendChild(buildCard(post)));
   listEl.appendChild(frag);
 
-  /* pager فقط وقتی بیشتر از یه صفحه پست داریم نشون داده میشه */
-  if (totalPages <= 1) {
-    pagerEl.hidden = true;
-  } else {
-    pagerEl.hidden = false;
-    prevBtn.disabled = currentPage <= 1;
-    nextBtn.disabled = currentPage >= totalPages;
-    pageLabel.textContent = `Page ${currentPage} of ${totalPages}`;
-  }
+  pagerEl.hidden = !PAGER_ENABLED;
+  prevBtn.disabled = currentPage <= 1;
+  nextBtn.disabled = currentPage >= totalPages;
+  pageLabel.textContent = `Page ${currentPage} of ${totalPages}`;
 
   window.scrollTo({ top: 0, behavior: 'instant' });
 }
