@@ -210,6 +210,12 @@ button{ font-family: inherit; cursor: pointer; }
   margin: 0 0 18px;
 }
 
+.post-footer{
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
 .post-meta{
   display: flex;
   align-items: center;
@@ -232,7 +238,7 @@ button{ font-family: inherit; cursor: pointer; }
 .post-date{
   font-size: 13px;
   color: var(--text-faint);
-  margin-right: auto;
+  margin-left: auto;
   display: flex;
   align-items: center;
   gap: 5px;
@@ -273,7 +279,8 @@ button{ font-family: inherit; cursor: pointer; }
   margin: 0 0 18px;
 }
 .post-body img{ border-radius: var(--radius); margin: 12px 0; }
-.load-error{ color: var(--text-faint); font-size: 13px; }
+
+/* ---------- Pager ---------- */
 
 .pager{
   max-width: 760px;
@@ -343,6 +350,8 @@ button{ font-family: inherit; cursor: pointer; }
 }
 .site-footer a:hover{ color: var(--text); }
 
+/* ---------- Responsive ---------- */
+
 @media (max-width: 640px){
   .site-header{ padding: 14px 18px; }
   .post-title{ font-size: 21px; }
@@ -355,55 +364,4 @@ button:focus-visible, a:focus-visible, input:focus-visible{
 
 @media (prefers-reduced-motion: reduce){
   *{ transition: none !important; }
-}
-
-/* ---------- Like button ---------- */
-
-.post-footer {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-}
-
-.btn-like {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  flex-shrink: 0;
-  background: none;
-  border: none;
-  padding: 5px 8px;
-  border-radius: var(--radius);
-  color: var(--text-faint);
-  font-family: inherit;
-  font-size: 13px;
-  cursor: pointer;
-  transition: color .15s ease, background .15s ease;
-}
-.btn-like:hover {
-  color: var(--text-dim);
-  background: var(--bg-raised);
-}
-.btn-like svg {
-  width: 16px;
-  height: 16px;
-  flex-shrink: 0;
-  transition: fill .15s ease, stroke .15s ease;
-}
-.btn-like.liked {
-  color: #e53e3e;
-}
-.btn-like.liked svg {
-  fill: #e53e3e;
-  stroke: #e53e3e;
-}
-.btn-like:disabled {
-  opacity: 0.5;
-  cursor: default;
-  pointer-events: none;
-}
-.like-count {
-  min-width: 14px;
-  display: inline-block;
 }
