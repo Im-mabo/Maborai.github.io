@@ -46,8 +46,7 @@ const searchInput = document.getElementById('search-input');
 const dateFilter = document.getElementById('date-filter');
 
 const PAGE_SIZE     = 25;
-const EXCERPT_LEN   = 200;
-const PAGER_ENABLED = false; // بذار false تا pager همیشه مخفی بمونه
+const PAGER_ENABLED = false;
 
 let allPosts        = [];
 let currentPage     = 1;
@@ -127,23 +126,21 @@ function buildCard(post) {
   const card = document.createElement('article');
   card.className = 'post-card';
 
-  const hasContent  = !!post.content;
-  const excerpt     = post.excerpt || '';
-  const needsClamp  = hasContent && excerpt.length > EXCERPT_LEN;
-  const shortText   = excerpt.slice(0, EXCERPT_LEN);
-  const excerptHtml = hasContent
-    ? `${escapeHtml(shortText)}${needsClamp ? '…' : ''}`
-    : escapeHtml(excerpt);
-  const safeContent = hasContent
-    ? (typeof DOMPurify !== 'undefined' ? DOMPurify.sanitize(post.content) : escapeHtml(post.content))
-    : '';
+  // اگه content داشت (HTML)، اون رو sanitize و نشون بده
+  // وگرنه excerpt رو به صورت plain text نشون بده
+  let bodyHtml = '';
+  if (post.content) {
+    bodyHtml = typeof DOMPurify !== 'undefined'
+      ? DOMPurify.sanitize(post.content)
+      : post.content;
+  } else if (post.excerpt) {
+    bodyHtml = escapeHtml(post.excerpt);
+  }
 
   card.innerHTML = `
     <img class="post-banner" src="${escapeAttr(post.banner || '')}" alt="" loading="lazy" onerror="this.style.display='none'">
     <h2 class="post-title">${escapeHtml(post.title || '')}</h2>
-    <p class="post-excerpt">${excerptHtml}</p>
-    <div class="post-body" hidden>${safeContent}</div>
-    ${hasContent ? `<button class="btn-readmore">See more</button>` : ''}
+    <div class="post-body">${bodyHtml}</div>
     <div class="post-footer">
       <div class="post-meta">
         <img class="author-avatar" src="${escapeAttr(post.authorAvatar || '')}" alt="" loading="lazy" onerror="this.style.display='none'">
@@ -157,21 +154,6 @@ function buildCard(post) {
 
   return card;
 }
-
-/* ---------- Click delegation ---------- */
-listEl.addEventListener('click', (e) => {
-  const readmoreBtn = e.target.closest('.btn-readmore');
-  if (!readmoreBtn) return;
-
-  const card      = readmoreBtn.closest('.post-card');
-  const bodyEl    = card.querySelector('.post-body');
-  const excerptEl = card.querySelector('.post-excerpt');
-  const isOpen    = !bodyEl.hidden;
-
-  bodyEl.hidden       = isOpen;
-  excerptEl.hidden    = !isOpen;
-  readmoreBtn.textContent = isOpen ? 'See more' : 'See less';
-});
 
 /* ---------- Pager ---------- */
 prevBtn.addEventListener('click', () => {
@@ -190,6 +172,7 @@ function applyFilters() {
     const matchesQuery = !q ||
       (post.title      || '').toLowerCase().includes(q) ||
       (post.excerpt    || '').toLowerCase().includes(q) ||
+      (post.content    || '').toLowerCase().includes(q) ||
       (post.authorName || '').toLowerCase().includes(q);
     const matchesDate = !dateVal || (post.date && post.date.slice(0, 10) === dateVal);
     return matchesQuery && matchesDate;
@@ -209,4 +192,3 @@ searchInput.addEventListener('input', applyFilters);
 dateFilter.addEventListener('change', applyFilters);
 
 loadPosts();
-
