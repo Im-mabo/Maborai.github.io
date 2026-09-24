@@ -47,7 +47,7 @@ const dateFilter = document.getElementById('date-filter');
 
 const PAGE_SIZE     = 25;
 const EXCERPT_LEN   = 200;
-const PAGER_ENABLED = true; // بذار false تا pager همیشه مخفی بمونه
+const PAGER_ENABLED = false; // بذار false تا pager همیشه مخفی بمونه
 
 let allPosts        = [];
 let currentPage     = 1;
