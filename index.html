@@ -5,6 +5,18 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Maborai</title>
 <link rel="stylesheet" href="style.css">
+
+<!-- FIX 5: apply theme immediately to prevent flash -->
+<script>
+  (function(){
+    var t = localStorage.getItem('theme') ||
+            (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    document.documentElement.setAttribute('data-theme', t);
+  })();
+</script>
+
+<!-- FIX 4: DOMPurify for sanitizing post content -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.1.6/purify.min.js"></script>
 </head>
 <body>
 
