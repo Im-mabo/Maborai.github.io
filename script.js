@@ -98,15 +98,20 @@ function renderPage() {
     const card = document.createElement('article');
     card.className = 'post-card';
 
-    const needsClamp = (post.excerpt || '').length > EXCERPT_LEN;
+    const hasContent = !!post.content;
+    const needsClamp = hasContent && (post.excerpt || '').length > EXCERPT_LEN;
     const shortText = (post.excerpt || '').slice(0, EXCERPT_LEN);
+
+    const excerptHtml = hasContent
+      ? `${escapeHtml(shortText)}${needsClamp ? '…' : ''}`
+      : (post.excerpt || '');
 
     card.innerHTML = `
       <img class="post-banner" src="${escapeAttr(post.banner)}" alt="" loading="lazy" onerror="this.style.display='none'">
       <h2 class="post-title">${escapeHtml(post.title)}</h2>
-      <p class="post-excerpt">${escapeHtml(shortText)}${needsClamp ? '…' : ''}</p>
+      <p class="post-excerpt">${excerptHtml}</p>
       <div class="post-body" hidden>${post.content || ''}</div>
-      ${post.content ? `<button class="btn-readmore">See more</button>` : ''}
+      ${hasContent ? `<button class="btn-readmore">See more</button>` : ''}
       <div class="post-meta">
         <img class="author-avatar" src="${escapeAttr(post.authorAvatar)}" alt="" loading="lazy" onerror="this.style.display='none'">
         <span class="author-name">${escapeHtml(post.authorName)}</span>
