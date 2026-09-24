@@ -113,7 +113,7 @@ function renderPage() {
   pagePosts.forEach(post => frag.appendChild(buildCard(post)));
   listEl.appendChild(frag);
 
-  /* فقط وقتی بیشتر از یه صفحه داریم pager نشون بده */
+  /* pager فقط وقتی بیشتر از یه صفحه پست داریم نشون داده میشه */
   if (totalPages <= 1) {
     pagerEl.hidden = true;
   } else {
@@ -152,11 +152,11 @@ function buildCard(post) {
       <div class="post-meta">
         <img class="author-avatar" src="${escapeAttr(post.authorAvatar || '')}" alt="" loading="lazy" onerror="this.style.display='none'">
         <span class="author-name">${escapeHtml(post.authorName || '')}</span>
-        <span class="post-date">${post.pinned
-          ? `<svg class="pin-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 17v5M8 3h8l-1 6 3 3v2H6v-2l3-3-1-6Z"/></svg> Pinned post`
-          : formatDate(post.date)
-        }</span>
       </div>
+      <span class="post-date">${post.pinned
+        ? `<svg class="pin-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 17v5M8 3h8l-1 6 3 3v2H6v-2l3-3-1-6Z"/></svg> Pinned post`
+        : formatDate(post.date)
+      }</span>
     </div>`;
 
   return card;
