@@ -90,6 +90,23 @@ button{ font-family: inherit; cursor: pointer; }
 .icon-btn:hover{ background: var(--bg-raised); }
 .icon-btn svg{ width: 19px; height: 19px; }
 
+.btn-new{
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  height: 38px;
+  padding: 0 16px;
+  border-radius: 999px;
+  background: var(--text);
+  color: var(--bg);
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+  transition: opacity .15s ease;
+}
+.btn-new:hover{ opacity: .85; }
+.btn-new svg{ width: 17px; height: 17px; }
+
 [data-theme="dark"] .icon-sun{ display: none; }
 [data-theme="light"] .icon-moon{ display: none; }
 
