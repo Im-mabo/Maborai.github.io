@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>چرا خواب دیدن مهم‌ترین کار روزانه‌ات است — Maborai</title>
+
+<link rel="stylesheet" href="../style.css">
+
+<script>
+  (function(){
+    var t = localStorage.getItem('theme') ||
+            (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    document.documentElement.setAttribute('data-theme', t);
+  })();
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.1.6/purify.min.js"></script>
+</head>
+<body>
+
+  <!-- ===== Header ===== -->
+  <header class="site-header">
+    <a href="index.html" class="brand">
+      <img id="logo-img" src="../logo-dark.png" alt="Maborai">
+      <span class="brand-name">Maborai</span>
+    </a>
+
+    <div class="header-icons">
+<a href="index.html" class="btn-new" title="Home" aria-label="Home">
+        <span>Home</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9.5 12 3l9 6.5V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9.5Z"/><path d="M9 21V12h6v9"/></svg>
+      </a>
+    </div>
+  </header>
+
+  <!-- ===== Post ===== -->
+  <main class="post-list" id="post-list">
+    <article class="post-card" style="padding-top:0">
+
+      <img
+        class="post-banner"
+        src="https://images.unsplash.com/photo-1516912481808-3406841bd33c?w=1200&q=80"
+        alt="یک نفر در حال خواب آرام"
+        loading="eager"
+        onerror="this.style.display='none'"
+      >
+
+      <h2 class="post-title">چرا خواب دیدن مهم‌ترین کار روزانه‌ات است</h2>
+
+      <div class="post-body">
+        <p>
+          وقتی چشم‌هایت را می‌بندی و وارد دنیای خواب می‌شوی، مغزت شلوغ‌ترین ساعت کاری‌اش را شروع می‌کند.
+          برخلاف تصور رایج، خواب یک حالت انفعالی نیست — بلکه فعال‌ترین حالت ذهنی است که تجربه می‌کنی.
+        </p>
+        <p>
+          در مرحله REM، مغز خاطرات روز را دسته‌بندی می‌کند، الگوهای احساسی را پردازش می‌کند و
+          ارتباط‌های جدیدی بین اطلاعات مختلف می‌سازد. همین فرآیند است که صبح‌ها حس می‌کنی
+          چیزی که دیروز سخت بود، حالا ساده‌تر به نظر می‌رسد.
+        </p>
+        <p>
+          محققان دانشگاه برکلی نشان داده‌اند که کمبود خواب حتی یک شب، توانایی تصمیم‌گیری را تا ۴۰٪
+          کاهش می‌دهد. این عدد بزرگ‌تر از تأثیر اکثر مواد مخدر قانونی است.
+          با این حال ما اغلب از خواب به عنوان اولین چیزی که فدا می‌کنیم یاد می‌کنیم.
+        </p>
+        <p>
+          یک تمرین ساده: هر شب ۱۵ دقیقه زودتر بخواب. نه یک ساعت، نه نیم ساعت — فقط ۱۵ دقیقه.
+          این تغییر کوچک بعد از یک هفته اثر محسوسی روی وضوح ذهنی صبح‌هایت خواهد داشت.
+        </p>
+        <p>
+          خوابیدن تنبلی نیست. سرمایه‌گذاری است.
+        </p>
+      </div>
+
+      <div class="post-footer">
+        <div class="post-meta">
+          <img
+            class="author-avatar"
+            src="https://i.pravatar.cc/60?img=47"
+            alt=""
+            loading="lazy"
+            onerror="this.style.display='none'"
+          >
+          <span class="author-name">مبارک رشیدی</span>
+        </div>
+        <span class="post-date">September 25, 2026</span>
+      </div>
+
+    </article>
+  </main>
+
+  <!-- ===== Footer ===== -->
+  <footer class="site-footer">
+    <nav class="footer-links">
+      <a href="/about">درباره اینجا</a>
+      <a href="https://blogix.ir/@maboroshi/chat">پشتیبانی</a>
+      <a href="/privacy">حریم خصوصی</a>
+      <a href="/terms">شرایط استفاده</a>
+    </nav>
+    <p>© 2026 کلیه حقوق این وب‌سایت متعلق به Maborai است.<br>
+    هیچ اطلاعاتی از شما ذخیره نمی‌شه، اگه شک دارید <a href="https://github.com/maborai/Maborai.github.io" target="_blank" rel="noopener">سورس</a> های این پلتفرم رو بررسی کنید.</p>
+  </footer>
+
+  <script>
+    // Theme
+    const root = document.documentElement;
+    const logoImg = document.getElementById('logo-img');
+
+    function applyTheme(theme) {
+      root.setAttribute('data-theme', theme);
+      logoImg.src = theme === 'dark' ? '../logo-dark.png' : '../logo-light.png';
+    }
+
+    applyTheme(root.getAttribute('data-theme'));
+  </script>
+
+</body>
+</html>
