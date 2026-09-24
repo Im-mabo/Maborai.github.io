@@ -209,3 +209,4 @@ searchInput.addEventListener('input', applyFilters);
 dateFilter.addEventListener('change', applyFilters);
 
 loadPosts();
+
