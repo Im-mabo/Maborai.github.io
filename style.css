@@ -1,11 +1,16 @@
 @import url('https://cdn.jsdelivr.net/fontsource/fonts/gfs-didot@5.3.0/latin-400-normal.css');
 @import url('https://cdn.jsdelivr.net/gh/rastikerdar/tanha-font@v0.10/dist/font-face.css');
-@import url('https://cdn.jsdelivr.net/fontsource/fonts/noto-color-emoji@latest/emoji-400-normal.css');
+
+@font-face{
+  font-family: 'AppleColorEmoji';
+  src: url('https://rozup.ir/view/4221218/iOS16_14.ttf') format('truetype');
+  font-display: swap;
+}
 
 :root{
   --radius: 4px;
-  --font-en: 'GFS Didot', 'Noto Color Emoji', serif;
-  --font-fa: 'Tanha', 'Noto Color Emoji', sans-serif;
+  --font-en: 'GFS Didot', 'AppleColorEmoji', serif;
+  --font-fa: 'Tanha', 'AppleColorEmoji', sans-serif;
 }
 
 [data-theme="dark"]{
@@ -47,7 +52,7 @@ button{ font-family: inherit; cursor: pointer; }
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 18px 32px;
+  padding: 12px 28px;
   border-bottom: 1px solid var(--border);
   position: sticky;
   top: 0;
@@ -62,13 +67,13 @@ button{ font-family: inherit; cursor: pointer; }
 }
 
 .brand img{
-  height: 40px;
-  width: 40px;
+  height: 30px;
+  width: 30px;
 }
 
 .brand-name{
   font-family: var(--font-en);
-  font-size: 19px;
+  font-size: 17px;
   font-weight: 700;
   letter-spacing: 0.2px;
 }
@@ -76,12 +81,12 @@ button{ font-family: inherit; cursor: pointer; }
 .header-icons{
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 2px;
 }
 
 .icon-btn{
-  width: 38px;
-  height: 38px;
+  width: 32px;
+  height: 32px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -92,25 +97,26 @@ button{ font-family: inherit; cursor: pointer; }
   transition: background .15s ease;
 }
 .icon-btn:hover{ background: var(--bg-raised); }
-.icon-btn svg{ width: 19px; height: 19px; }
+.icon-btn svg{ width: 17px; height: 17px; }
 
 .btn-new{
   display: flex;
   align-items: center;
-  gap: 7px;
-  height: 38px;
-  padding: 0 16px;
+  gap: 6px;
+  height: 32px;
+  padding: 0 14px;
   border-radius: 999px;
   background: transparent;
-  border: 1.5px solid var(--text);
+  border: 1px solid var(--text);
   color: var(--text);
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 600;
   white-space: nowrap;
   transition: background .15s ease;
+  margin-right: 4px;
 }
 .btn-new:hover{ background: var(--bg-raised); }
-.btn-new svg{ width: 17px; height: 17px; }
+.btn-new svg{ width: 15px; height: 15px; }
 
 [data-theme="dark"] .icon-sun{ display: none; }
 [data-theme="light"] .icon-moon{ display: none; }
