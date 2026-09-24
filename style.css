@@ -1,4 +1,11 @@
-@import url('https://cdn.jsdelivr.net/fontsource/fonts/gfs-didot@5.3.0/latin-400-normal.css');
+@font-face{
+  font-family: 'GFS Didot';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('https://cdn.jsdelivr.net/fontsource/fonts/gfs-didot@5.3.0/latin-400-normal.woff2') format('woff2'),
+       url('https://cdn.jsdelivr.net/fontsource/fonts/gfs-didot@5.3.0/latin-400-normal.woff') format('woff');
+}
 @import url('https://cdn.jsdelivr.net/gh/rastikerdar/tanha-font@v0.10/dist/font-face.css');
 
 @font-face{
@@ -301,6 +308,23 @@ button{ font-family: inherit; cursor: pointer; }
   padding: 28px 24px 40px;
   text-align: center;
 }
+
+.footer-links{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.footer-links a{
+  font-family: var(--font-fa);
+  font-size: 13px;
+  color: var(--text-dim);
+  transition: color .15s ease;
+}
+.footer-links a:hover{ color: var(--text); }
 
 .site-footer p{
   font-family: var(--font-fa);
