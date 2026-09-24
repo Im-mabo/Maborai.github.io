@@ -210,8 +210,6 @@ button{ font-family: inherit; cursor: pointer; }
   margin: 0 0 18px;
 }
 
-/* post-footer is the row: author info on the "start" side (right in RTL),
-   date pushed to the far "end" side (left in RTL) via margin-inline-start:auto */
 .post-footer{
   display: flex;
   align-items: center;
@@ -240,7 +238,7 @@ button{ font-family: inherit; cursor: pointer; }
 .post-date{
   font-size: 13px;
   color: var(--text-faint);
-  margin-inline-start: auto; /* pushes date to the left in RTL layout */
+  margin-inline-start: auto;
   display: flex;
   align-items: center;
   gap: 5px;
@@ -316,7 +314,7 @@ button{ font-family: inherit; cursor: pointer; }
 .static-page{
   max-width: 760px;
   margin: 0 auto;
-  padding: 48px 24px 100px;
+  padding: 48px 48px 100px;
 }
 
 .static-title{
@@ -435,6 +433,7 @@ button{ font-family: inherit; cursor: pointer; }
 @media (max-width: 640px){
   .site-header{ padding: 14px 18px; }
   .post-title{ font-size: 21px; }
+  .static-page{ padding: 32px 24px 80px; }
 }
 
 button:focus-visible, a:focus-visible, input:focus-visible{
