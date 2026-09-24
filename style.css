@@ -97,14 +97,15 @@ button{ font-family: inherit; cursor: pointer; }
   height: 38px;
   padding: 0 16px;
   border-radius: 999px;
-  background: var(--text);
-  color: var(--bg);
+  background: transparent;
+  border: 1.5px solid var(--text);
+  color: var(--text);
   font-size: 14px;
   font-weight: 600;
   white-space: nowrap;
-  transition: opacity .15s ease;
+  transition: background .15s ease;
 }
-.btn-new:hover{ opacity: .85; }
+.btn-new:hover{ background: var(--bg-raised); }
 .btn-new svg{ width: 17px; height: 17px; }
 
 [data-theme="dark"] .icon-sun{ display: none; }
