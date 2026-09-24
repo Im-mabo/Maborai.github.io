@@ -210,6 +210,8 @@ button{ font-family: inherit; cursor: pointer; }
   margin: 0 0 18px;
 }
 
+/* post-footer is the row: author info on the "start" side (right in RTL),
+   date pushed to the far "end" side (left in RTL) via margin-inline-start:auto */
 .post-footer{
   display: flex;
   align-items: center;
@@ -238,7 +240,7 @@ button{ font-family: inherit; cursor: pointer; }
 .post-date{
   font-size: 13px;
   color: var(--text-faint);
-  margin-left: auto;
+  margin-inline-start: auto; /* pushes date to the left in RTL layout */
   display: flex;
   align-items: center;
   gap: 5px;
