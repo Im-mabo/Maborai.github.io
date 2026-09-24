@@ -1,59 +1,3 @@
-/* ---------- Upstash Config ---------- */
-// مقادیر زیر رو از console.upstash.com → database → REST API بگیر
-const UPSTASH_URL   = 'https://working-mammoth-296353.upstash.io';
-const UPSTASH_TOKEN = 'ggAAAAAABIWhAAIgcDEd33eDCPcKKM_b8YwRRQnIh81RKIVF1Fa3M-DpNfXNQw';
-
-/* ---------- Upstash helpers ---------- */
-async function upstashCmd(...args) {
-  try {
-    const res = await fetch(UPSTASH_URL, {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${UPSTASH_TOKEN}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(args),
-    });
-    const json = await res.json();
-    return json.result;
-  } catch (e) {
-    console.error('Upstash error:', e);
-    return null;
-  }
-}
-
-async function upstashPipeline(commands) {
-  try {
-    const res = await fetch(`${UPSTASH_URL}/pipeline`, {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${UPSTASH_TOKEN}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(commands),
-    });
-    return await res.json();
-  } catch (e) {
-    console.error('Upstash pipeline error:', e);
-    return [];
-  }
-}
-
-/* ---------- User likes (localStorage) ---------- */
-function getUserLikes() {
-  try { return JSON.parse(localStorage.getItem('maborai:likes') || '{}'); }
-  catch { return {}; }
-}
-function setUserLike(postId, liked) {
-  const likes = getUserLikes();
-  if (liked) likes[postId] = true;
-  else delete likes[postId];
-  localStorage.setItem('maborai:likes', JSON.stringify(likes));
-}
-function hasUserLiked(postId) {
-  return !!getUserLikes()[postId];
-}
-
 /* ---------- Generate stable ID from title ---------- */
 function slugify(title = '') {
   return title
@@ -101,8 +45,19 @@ const emptyEl = document.getElementById('empty-state');
 const searchInput = document.getElementById('search-input');
 const dateFilter = document.getElementById('date-filter');
 
-let allPosts = [];
+const PAGE_SIZE   = 25;
+const EXCERPT_LEN = 200;
 
+let allPosts        = [];
+let currentPage     = 1;
+let currentFiltered = [];
+
+const pagerEl   = document.getElementById('pager');
+const prevBtn   = document.getElementById('prev-page');
+const nextBtn   = document.getElementById('next-page');
+const pageLabel = document.getElementById('page-label');
+
+/* ---------- Load posts ---------- */
 async function loadPosts() {
   try {
     const res = await fetch('index.json', { cache: 'no-store' });
@@ -122,6 +77,7 @@ async function loadPosts() {
   }
 }
 
+/* ---------- Format date ---------- */
 function formatDate(dateStr) {
   try {
     return new Intl.DateTimeFormat('en-US', {
@@ -130,16 +86,7 @@ function formatDate(dateStr) {
   } catch { return dateStr; }
 }
 
-const PAGE_SIZE  = 30;
-const EXCERPT_LEN = 200;
-let currentPage     = 1;
-let currentFiltered = [];
-
-const pagerEl   = document.getElementById('pager');
-const prevBtn   = document.getElementById('prev-page');
-const nextBtn   = document.getElementById('next-page');
-const pageLabel = document.getElementById('page-label');
-
+/* ---------- Render ---------- */
 function render(posts) {
   currentFiltered = posts;
   currentPage = 1;
@@ -163,108 +110,60 @@ function renderPage() {
   const pagePosts = currentFiltered.slice(start, start + PAGE_SIZE);
 
   const frag = document.createDocumentFragment();
-  pagePosts.forEach(post => {
-    const card = document.createElement('article');
-    card.className = 'post-card';
-
-    const postId     = slugify(post.title);
-    const hasContent = !!post.content;
-    const excerpt    = post.excerpt || '';
-    const needsClamp = hasContent && excerpt.length > EXCERPT_LEN;
-    const shortText  = excerpt.slice(0, EXCERPT_LEN);
-    const excerptHtml = hasContent
-      ? `${escapeHtml(shortText)}${needsClamp ? '…' : ''}`
-      : escapeHtml(excerpt);
-    const safeContent = hasContent
-      ? (typeof DOMPurify !== 'undefined' ? DOMPurify.sanitize(post.content) : escapeHtml(post.content))
-      : '';
-
-    const liked = hasUserLiked(postId);
-
-    card.innerHTML = `
-      <img class="post-banner" src="${escapeAttr(post.banner || '')}" alt="" loading="lazy" onerror="this.style.display='none'">
-      <h2 class="post-title">${escapeHtml(post.title || '')}</h2>
-      <p class="post-excerpt">${excerptHtml}</p>
-      <div class="post-body" hidden>${safeContent}</div>
-      ${hasContent ? `<button class="btn-readmore">See more</button>` : ''}
-      <div class="post-footer">
-        <div class="post-meta">
-          <img class="author-avatar" src="${escapeAttr(post.authorAvatar || '')}" alt="" loading="lazy" onerror="this.style.display='none'">
-          <span class="author-name">${escapeHtml(post.authorName || '')}</span>
-          <span class="post-date">${post.pinned
-            ? `<svg class="pin-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 17v5M8 3h8l-1 6 3 3v2H6v-2l3-3-1-6Z"/></svg> Pinned post`
-            : formatDate(post.date)
-          }</span>
-        </div>
-        <button class="btn-like${liked ? ' liked' : ''}" data-id="${escapeAttr(postId)}" aria-label="Like">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
-          </svg>
-          <span class="like-count"></span>
-        </button>
-      </div>`;
-    frag.appendChild(card);
-  });
+  pagePosts.forEach(post => frag.appendChild(buildCard(post)));
   listEl.appendChild(frag);
 
-  pagerEl.hidden = totalPages <= 1;
-  prevBtn.disabled = currentPage <= 1;
-  nextBtn.disabled = currentPage >= totalPages;
-  pageLabel.textContent = `Page ${currentPage} of ${totalPages}`;
+  /* فقط وقتی بیشتر از یه صفحه داریم pager نشون بده */
+  if (totalPages <= 1) {
+    pagerEl.hidden = true;
+  } else {
+    pagerEl.hidden = false;
+    prevBtn.disabled = currentPage <= 1;
+    nextBtn.disabled = currentPage >= totalPages;
+    pageLabel.textContent = `Page ${currentPage} of ${totalPages}`;
+  }
 
   window.scrollTo({ top: 0, behavior: 'instant' });
-
-  // load counts after DOM is ready
-  loadLikeCounts();
 }
 
-/* ---------- Load like counts ---------- */
-async function loadLikeCounts() {
-  const buttons = listEl.querySelectorAll('.btn-like');
-  if (!buttons.length) return;
+/* ---------- Build card ---------- */
+function buildCard(post) {
+  const card = document.createElement('article');
+  card.className = 'post-card';
 
-  const ids      = Array.from(buttons).map(b => b.dataset.id);
-  const commands = ids.map(id => ['HGET', 'post:likes', id]);
-  const results  = await upstashPipeline(commands);
+  const hasContent  = !!post.content;
+  const excerpt     = post.excerpt || '';
+  const needsClamp  = hasContent && excerpt.length > EXCERPT_LEN;
+  const shortText   = excerpt.slice(0, EXCERPT_LEN);
+  const excerptHtml = hasContent
+    ? `${escapeHtml(shortText)}${needsClamp ? '…' : ''}`
+    : escapeHtml(excerpt);
+  const safeContent = hasContent
+    ? (typeof DOMPurify !== 'undefined' ? DOMPurify.sanitize(post.content) : escapeHtml(post.content))
+    : '';
 
-  buttons.forEach((btn, i) => {
-    const count = Math.max(0, parseInt(results[i]?.result || '0', 10));
-    btn.querySelector('.like-count').textContent = count > 0 ? count : '';
-  });
-}
+  card.innerHTML = `
+    <img class="post-banner" src="${escapeAttr(post.banner || '')}" alt="" loading="lazy" onerror="this.style.display='none'">
+    <h2 class="post-title">${escapeHtml(post.title || '')}</h2>
+    <p class="post-excerpt">${excerptHtml}</p>
+    <div class="post-body" hidden>${safeContent}</div>
+    ${hasContent ? `<button class="btn-readmore">See more</button>` : ''}
+    <div class="post-footer">
+      <div class="post-meta">
+        <img class="author-avatar" src="${escapeAttr(post.authorAvatar || '')}" alt="" loading="lazy" onerror="this.style.display='none'">
+        <span class="author-name">${escapeHtml(post.authorName || '')}</span>
+        <span class="post-date">${post.pinned
+          ? `<svg class="pin-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 17v5M8 3h8l-1 6 3 3v2H6v-2l3-3-1-6Z"/></svg> Pinned post`
+          : formatDate(post.date)
+        }</span>
+      </div>
+    </div>`;
 
-/* ---------- Handle like click ---------- */
-async function handleLike(btn) {
-  const postId  = btn.dataset.id;
-  const wasLiked = btn.classList.contains('liked');
-
-  // optimistic update
-  btn.classList.toggle('liked');
-  btn.disabled = true;
-
-  const delta    = wasLiked ? -1 : 1;
-  const newCount = await upstashCmd('HINCRBY', 'post:likes', postId, delta);
-
-  btn.disabled = false;
-
-  if (newCount !== null) {
-    setUserLike(postId, !wasLiked);
-    const count = Math.max(0, parseInt(newCount, 10));
-    btn.querySelector('.like-count').textContent = count > 0 ? count : '';
-  } else {
-    // revert on error
-    btn.classList.toggle('liked');
-  }
+  return card;
 }
 
 /* ---------- Click delegation ---------- */
-listEl.addEventListener('click', async (e) => {
-  const likeBtn = e.target.closest('.btn-like');
-  if (likeBtn) {
-    await handleLike(likeBtn);
-    return;
-  }
-
+listEl.addEventListener('click', (e) => {
   const readmoreBtn = e.target.closest('.btn-readmore');
   if (!readmoreBtn) return;
 
@@ -273,11 +172,12 @@ listEl.addEventListener('click', async (e) => {
   const excerptEl = card.querySelector('.post-excerpt');
   const isOpen    = !bodyEl.hidden;
 
-  bodyEl.hidden    = isOpen;
-  excerptEl.hidden = !isOpen;
+  bodyEl.hidden       = isOpen;
+  excerptEl.hidden    = !isOpen;
   readmoreBtn.textContent = isOpen ? 'See more' : 'See less';
 });
 
+/* ---------- Pager ---------- */
 prevBtn.addEventListener('click', () => {
   if (currentPage > 1) { currentPage--; renderPage(); }
 });
@@ -301,6 +201,7 @@ function applyFilters() {
   render(filtered);
 }
 
+/* ---------- Helpers ---------- */
 function escapeHtml(str = '') {
   return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 }
