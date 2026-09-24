@@ -54,12 +54,12 @@ button{ font-family: inherit; cursor: pointer; }
 .brand{
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 6px;
 }
 
 .brand img{
-  height: 30px;
-  width: 30px;
+  height: 40px;
+  width: 40px;
 }
 
 .brand-name{
@@ -263,6 +263,29 @@ button{ font-family: inherit; cursor: pointer; }
   font-size: 13px;
   color: var(--text-faint);
 }
+
+/* ---------- Footer ---------- */
+
+.site-footer{
+  border-top: 1px solid var(--border);
+  padding: 28px 24px 40px;
+  text-align: center;
+}
+
+.site-footer p{
+  max-width: 560px;
+  margin: 0 auto;
+  font-size: 13px;
+  line-height: 1.9;
+  color: var(--text-faint);
+}
+
+.site-footer a{
+  color: var(--text-dim);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.site-footer a:hover{ color: var(--text); }
 
 @media (max-width: 640px){
   .site-header{ padding: 14px 18px; }
